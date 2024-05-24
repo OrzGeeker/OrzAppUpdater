@@ -38,12 +38,13 @@ struct OrzApp: App {
 
 4. Config App's Info.plist
 
-- add `SUFeedURL` into Info.plist. Set the value with the URL of your appcast file url
-
-- add `SUPublicEDKey` into Info.plist with key. 
+- add `SUFeedURL` into Info.plist. Set the value with the URL of your appcast.xml file
 
 - Use sparkle binary cli `generate_keys` to get your public key value. 
-and you can use `generate_keys -x private_key`/ `generate_keys -f private_key` to export 
+
+- add `SUPublicEDKey` into Info.plist with public key value. 
+
+you can use `generate_keys -x private_key`/ `generate_keys -f private_key` to export 
 or import the private key into your device local keychain. make the private_key safe
 
 4. Generate appcast
