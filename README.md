@@ -44,10 +44,10 @@ struct OrzApp: App {
 
 - add `SUPublicEDKey` into Info.plist with public key value. 
 
-you can use `generate_keys -x private_key`/ `generate_keys -f private_key` to export 
-or import the private key into your device local keychain. make the private_key safe
+    you can use `generate_keys -x private_key`/ `generate_keys -f private_key` to export 
+    or import the private key into your device local keychain. make the private_key safe
 
-4. Generate appcast
+5. Generate appcast
 
 - archive your macOS app by direct distribution with your apple developerId login
 
