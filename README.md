@@ -55,7 +55,7 @@ struct OrzApp: App {
 
 - use command `tar -cJf yourappname.tar.xz /path/to/yourappname.app` to create a `*.tar.xz` zip of your `.app` bundle
 
-- use sparkle cli `generate_appcast /path/to/yourappname.tar.xz` to generate the appcast.xml file
+- use sparkle cli `generate_appcast /dir_path/of/yourappname.tar.xz` to generate the appcast.xml file
 
 - upload the `yourappname.tar.xz`, and get an url
 
