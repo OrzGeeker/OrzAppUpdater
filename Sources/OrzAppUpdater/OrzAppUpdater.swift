@@ -3,6 +3,7 @@
 
 import SwiftUI
 import Sparkle
+import Foundation
 
 public typealias OrzAppUpdaterController = SPUStandardUpdaterController
 extension OrzAppUpdaterController {
@@ -21,6 +22,28 @@ extension Scene {
                 CheckForUpdatesView(updater: updaterController.updater, title: title)
             }
         }
+    }
+}
+
+public struct OrzAppUpdaterDiagnostics {
+    public static func infoPlistIssues(bundle: Bundle = .main) -> [String] {
+        let info = bundle.infoDictionary ?? [:]
+        var issues: [String] = []
+        let feedURLString = (info["SUFeedURL"] as? String) ?? ""
+        let publicKey = (info["SUPublicEDKey"] as? String) ?? ""
+        let bundleVersion = (info["CFBundleVersion"] as? String) ?? ""
+        if feedURLString.isEmpty {
+            issues.append("Missing SUFeedURL")
+        } else if URL(string: feedURLString) == nil {
+            issues.append("Invalid SUFeedURL")
+        }
+        if publicKey.isEmpty {
+            issues.append("Missing SUPublicEDKey")
+        }
+        if bundleVersion.isEmpty {
+            issues.append("Missing CFBundleVersion")
+        }
+        return issues
     }
 }
 

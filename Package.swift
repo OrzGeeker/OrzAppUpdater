@@ -12,7 +12,7 @@ let package = Package(
         .library(name: "OrzAppUpdater", targets: ["OrzAppUpdater"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.6.2")
+        .package(url: "https://github.com/sparkle-project/Sparkle.git", from: "2.9.0")
     ],
     targets: [
         .target(name: "OrzAppUpdater",dependencies: [.product(name: "Sparkle", package: "sparkle")])

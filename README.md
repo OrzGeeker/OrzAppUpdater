@@ -1,24 +1,24 @@
 # OrzAppUpdater
 
-App Updater for macOS app using Sparkle Framework
+基于 Sparkle 的 macOS 应用更新封装，面向 SwiftUI，提供“检查更新…”菜单项与配置诊断能力。
 
+## 环境要求
 
-# Usage
+- macOS 11+
+- Swift 5.10 / Xcode 15+
+- Sparkle 2.9.0
 
-
-1. Add SPM
+## 安装
 
 ```swift
 .package(url: "https://github.com/OrzGeeker/OrzAppUpdater.git", branch: "main")
 ```
 
-2. Use SPM Product
-
-```swift 
+```swift
 .product(name: "OrzAppUpdater", package: "OrzAppUpdater")
 ```
 
-3. Setup App
+## 使用
 
 ```swift
 import SwiftUI
@@ -29,42 +29,46 @@ struct OrzApp: App {
     let updaterController = OrzAppUpdaterController()
     var body: some Scene {
         WindowGroup {
-            ...
         }
         .addCheckUpdatesCommand(updaterController: updaterController)
     }
 }
 ```
 
-4. Config App's Info.plist
+## 必选配置
 
-- add `SUFeedURL` into Info.plist. Set the value with the URL of your appcast.xml file
+Info.plist 必须包含：
 
-- Use sparkle binary cli `generate_keys` to get your public key value. 
+| Key | 说明 | 示例 |
+| --- | --- | --- |
+| SUFeedURL | appcast.xml 地址 | https://yourcompany.example.com/appcast.xml |
+| SUPublicEDKey | Ed25519 公钥 | BASE64_PUBLIC_KEY |
+| CFBundleVersion | 构建版本号 | 100 |
 
-- add `SUPublicEDKey` into Info.plist with public key value. 
+```xml
+<key>SUFeedURL</key>
+<string>https://yourcompany.example.com/appcast.xml</string>
+<key>SUPublicEDKey</key>
+<string>BASE64_PUBLIC_KEY</string>
+```
 
-    you can use `generate_keys -x private_key`/ `generate_keys -f private_key` to export 
-    or import the private key into your device local keychain. make the private_key safe
+## appcast 生成
 
-5. Generate appcast
+```bash
+tar -cJf YourApp.tar.xz /path/to/YourApp.app
+./bin/generate_appcast /path/to/updates_folder
+```
 
-- archive your macOS app by direct distribution with your apple developerId login
+## 接入自检
 
-- Notarizing the archive product and export it to a directory
+```swift
+let issues = OrzAppUpdaterDiagnostics.infoPlistIssues()
+if !issues.isEmpty {
+    print(issues.joined(separator: "\n"))
+}
+```
 
-- use command `tar -cJf yourappname.tar.xz /path/to/yourappname.app` to create a `*.tar.xz` zip of your `.app` bundle
+## Links
 
-- use sparkle cli `generate_appcast /path/to/yourappname.tar.xz` to generate the appcast.xml file
-
-- upload the `yourappname.tar.xz`, and get an url
-
-- change your appcase.xml content for tag `<enclosure url="https://xxx/yourappname.tar.xz"`, make the url prop equal the uploaded app.tar.xz's url
-
-- upload the appcase.xml to the location of `SUFeedURL`'s value specified
-
-# Links
-
-- [Sparkle](https://sparkle-project.org/)
-
-- [Sparkle Doc](https://sparkle-project.org/documentation/)
+- https://sparkle-project.org/
+- https://sparkle-project.org/documentation/
