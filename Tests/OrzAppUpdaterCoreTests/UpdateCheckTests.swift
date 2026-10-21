@@ -30,4 +30,22 @@ final class UpdateCheckTests: XCTestCase {
         let bad = String(decoding: feed(["2"]), as: UTF8.self).replacingOccurrences(of: "https://downloads", with: "http://downloads")
         XCTAssertThrowsError(try OrzAppUpdateCheck.newestRelease(in: Data(bad.utf8), currentBuild: "1"))
     }
+    func testRedirectsStayOnHTTPSOriginWithoutStartingRequests() throws {
+        let origin = URL(string: "https://updates.example.test/feed")!
+        let guardDelegate = RedirectGuard(origin: origin)
+        let session = URLSession(configuration: .ephemeral)
+        defer { session.invalidateAndCancel() }
+        let task = session.dataTask(with: origin)
+        let response = HTTPURLResponse(url: origin, statusCode: 302, httpVersion: nil, headerFields: nil)!
+        for (address, allowed) in [("https://updates.example.test/new-feed", true),
+                                    ("http://updates.example.test/feed", false),
+                                    ("https://other.example.test/feed", false),
+                                    ("https://updates.example.test:444/feed", false)] {
+            var accepted = false
+            guardDelegate.urlSession(session, task: task, willPerformHTTPRedirection: response,
+                newRequest: URLRequest(url: URL(string: address)!)) { accepted = $0 != nil }
+            XCTAssertEqual(accepted, allowed)
+        }
+    }
+
 }

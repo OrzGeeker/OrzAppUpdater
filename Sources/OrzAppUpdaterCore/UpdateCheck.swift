@@ -96,7 +96,7 @@ private final class FeedParser: NSObject, XMLParserDelegate {
     var valid: Bool { rootSeen && channels == 1 && !invalid && path.isEmpty }
 }
 
-private final class RedirectGuard: NSObject, URLSessionTaskDelegate {
+final class RedirectGuard: NSObject, URLSessionTaskDelegate {
     let origin: URL
     init(origin: URL) { self.origin = origin }
     func urlSession(_ session: URLSession, task: URLSessionTask,
