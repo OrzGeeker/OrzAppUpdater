@@ -72,3 +72,20 @@ if !issues.isEmpty {
 
 - https://sparkle-project.org/
 - https://sparkle-project.org/documentation/
+
+## Stateless checks (no Sparkle preferences)
+
+`OrzAppUpdaterCore` is a separate Foundation-only product. It does not initialize
+Sparkle, use UserDefaults, download payloads, schedule checks, or install updates.
+Call `OrzAppUpdateCheck.check(configuration)` explicitly. The transport uses an
+ephemeral session without cache, cookie or credential stores; rejects insecure
+URLs and cross-origin redirects; and limits UTF-8 XML appcasts to 1 MiB.
+
+The offline parser `newestRelease(in:currentBuild:)` supports numeric dotted build
+versions and one signed full enclosure per item. Missing/malformed metadata, DTDs,
+external entities, and insecure enclosure URLs fail closed. It checks Ed25519 key
+and signature **format**, not the downloaded artifact's authenticity. A returned
+release is untrusted availability metadata, never permission to install. Deployment
+must still implement supported-OS/channel filtering, payload verification,
+installation lifecycle, and rollback. This product leaves the existing Sparkle
+controller's behavior unchanged.
